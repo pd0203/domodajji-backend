@@ -6,7 +6,9 @@ pymysql.install_as_MySQLdb()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-u3@0tu+wp&!tlacikt)f31s(_s#avsl1k-y50qb5qn)xk6#pez'
+load_dotenv()
+
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 DEBUG = True
 
