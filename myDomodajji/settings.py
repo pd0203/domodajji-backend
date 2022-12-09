@@ -6,11 +6,16 @@ pymysql.install_as_MySQLdb()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-u3@0tu+wp&!tlacikt)f31s(_s#avsl1k-y50qb5qn)xk6#pez'
+load_dotenv()
+
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
+
+# Re-Definition of User Model 
+AUTH_USER_MODEL = 'users.User'
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -70,7 +75,10 @@ DATABASES = {
         'HOST': os.environ.get('DB_HOST'),
         'PORT': os.environ.get('DB_PORT'),
 		'OPTIONS': {'charset': os.environ.get('DB_OPTION')},
-        'ATOMIC_REQUESTS': True
+        'ATOMIC_REQUESTS': True,
+        'TEST': {
+            'NAME' : os.environ.get('TEST_DB_NAME')
+        }
     }
 }
 
