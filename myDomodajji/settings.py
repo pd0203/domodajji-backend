@@ -72,7 +72,10 @@ DATABASES = {
         'HOST': os.environ.get('DB_HOST'),
         'PORT': os.environ.get('DB_PORT'),
 		'OPTIONS': {'charset': os.environ.get('DB_OPTION')},
-        'ATOMIC_REQUESTS': True
+        'ATOMIC_REQUESTS': True,
+        'TEST': {
+            'NAME' : os.environ.get('TEST_DB_NAME')
+        }
     }
 }
 

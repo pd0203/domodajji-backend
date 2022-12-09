@@ -7,7 +7,6 @@ from django.test.runner import DiscoverRunner
 # 밑의 기존 메서드들을 재정의하여 비어두면, 
 # 테스트시 테스트 DB 생성 없이 테스트 가능 
 class TestRunner(DiscoverRunner):
-
     def setup_databases(self, **kwargs):
         pass
     
