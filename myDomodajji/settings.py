@@ -14,6 +14,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+# Re-Definition of User Model 
+AUTH_USER_MODEL = 'users.User'
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
