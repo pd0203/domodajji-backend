@@ -17,6 +17,9 @@ ALLOWED_HOSTS = ['*']
 # Re-Definition of User Model 
 AUTH_USER_MODEL = 'users.User'
 
+# JWT 환경 설정
+REST_USE_JWT = True
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -76,9 +79,16 @@ DATABASES = {
         'PORT': os.environ.get('DB_PORT'),
 		'OPTIONS': {'charset': os.environ.get('DB_OPTION')},
         'ATOMIC_REQUESTS': True,
-        'TEST': {
-            'NAME' : os.environ.get('TEST_DB_NAME')
-        }
+    },
+    'test': {
+        'ENGINE': os.environ.get('DB_ENGINE'),
+        'NAME': os.environ.get('TEST_DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': os.environ.get('DB_HOST'),
+        'PORT': os.environ.get('DB_PORT'),
+		'OPTIONS': {'charset': os.environ.get('DB_OPTION')},
+        'ATOMIC_REQUESTS': True,
     }
 }
 

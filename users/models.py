@@ -21,12 +21,12 @@ class User(AbstractUser):
       name = models.CharField(max_length=30)
       email = models.EmailField(max_length=100, unique=True)
       phone_number = models.CharField(max_length=100, unique=True)
-      password = models.CharField(max_length=200)
-      sns_type = models.CharField(max_length=50)
-      birthday = models.PositiveBigIntegerField()
+      password = models.CharField(max_length=255)
+      sns_type = models.CharField(max_length=50, null=True)
+      birthday = models.PositiveBigIntegerField(null=True)
       profile_img_url = models.URLField(max_length=200, null=True)
       created_at = models.DateTimeField(auto_now_add=True)
-      deleted_at = models.DateTimeField()
+      deleted_at = models.DateTimeField(null=True)
       
       # Remove the username field from the user model 
       username = None 
