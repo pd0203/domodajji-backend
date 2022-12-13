@@ -79,16 +79,6 @@ DATABASES = {
         'PORT': os.environ.get('DB_PORT'),
 		'OPTIONS': {'charset': os.environ.get('DB_OPTION')},
         'ATOMIC_REQUESTS': True,
-    },
-    'test': {
-        'ENGINE': os.environ.get('DB_ENGINE'),
-        'NAME': os.environ.get('TEST_DB_NAME'),
-        'USER': os.environ.get('DB_USER'),
-        'PASSWORD': os.environ.get('DB_PASSWORD'),
-        'HOST': os.environ.get('DB_HOST'),
-        'PORT': os.environ.get('DB_PORT'),
-		'OPTIONS': {'charset': os.environ.get('DB_OPTION')},
-        'ATOMIC_REQUESTS': True,
     }
 }
 
