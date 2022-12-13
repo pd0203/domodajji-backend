@@ -8,7 +8,7 @@ class UserSignUpSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(write_only=True)
     class Meta:
         model = User 
-        fields = ['email', 'password', 'password2', 'name', 'phone_number']
+        fields = ['email', 'password', 'password2', 'name']
     def create(self, validated_data):
         password = validated_data['password']
         password2 = validated_data['password2']
@@ -22,8 +22,6 @@ class UserSignUpSerializer(serializers.ModelSerializer):
         user = User.objects.filter(email=data['email'])
         if user: 
            raise ValidationError('USER ALREADY REGISTERED')
-        if len(data['phone_number']) != 11: 
-           raise ValueError('PHONE NUMBER MUST BE 11 CHARACTERS')
         return data
     def validate_password(self, password):
         try:

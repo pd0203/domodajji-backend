@@ -11,6 +11,13 @@ from django.contrib.auth.hashers import make_password
 # # 4. test 파일내 test 함수명은 test로 시작 
 
 class UserSignUpTest(APITestCase):
+    def setUp(self):
+        User.objects.create(
+            email = "adefg@gmail.com",
+            password = "abde1235",
+            name = "김한길"
+        )
+
     @override_settings(DEBUG=True)
     def test_signup_success(self): 
         url = reverse("signup")
@@ -18,10 +25,10 @@ class UserSignUpTest(APITestCase):
           "email": "adefgh@gmail.com",
           "password": "abde1235",
           "password2": "abde1235",
-          "name": "박효상",
-          "phone_number": "01099998890"
+          "name": "박효상"
         }
         response = self.client.post(url, user_data, format='json')
+        print("response", response.data)
         self.assertEqual(response.status_code, 201)
         self.assertIn('access_token', response.data)
         self.assertIn('refresh_token', response.data)
@@ -33,8 +40,7 @@ class UserSignUpTest(APITestCase):
           "email": "abcd@gmail.com",
           "password": "1235",
           "password2": "1235",
-          "name": "April",
-          "phone_number": "01099998891"
+          "name": "April"
         }
         response = self.client.post(url, user_data, format='json')
         self.assertEqual(response.status_code, 400)
@@ -46,8 +52,19 @@ class UserSignUpTest(APITestCase):
           "email": "abcd",
           "password": "abcd1235",
           "password2": "abcd1235",
-          "name": "Aprils",
-          "phone_number": "01099998892"
+          "name": "Aprils"
+        }
+        response = self.client.post(url, user_data, format='json')
+        self.assertEqual(response.status_code, 400)
+    
+    @override_settings(DEBUG=True)        
+    def test_signup_failure3(self): 
+        url = reverse("signup")
+        user_data = {
+          "email": "adefghhh@gmail.com",
+          "password": "abcd1235",
+          "password2": "abcd1235",
+          "name": "김한길"
         }
         response = self.client.post(url, user_data, format='json')
         self.assertEqual(response.status_code, 400)
@@ -58,12 +75,10 @@ class UserLoginTest(APITestCase):
             email = "adefg@gmail.com",
             password = make_password("abde1235")
         )
-        print("user info", self.user)
 
     @override_settings(DEBUG=True)
     def test_login_success(self):
         url = reverse("login")
-        temp_user = User.objects.filter(email=self.user.email)
         user_data = {
           "email": "adefg@gmail.com",
           "password": "abde1235"
