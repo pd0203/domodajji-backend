@@ -1,7 +1,6 @@
 from users.models import User 
 from users.serializers import * 
-from utils.token import generate_access_token
-from utils.token import generate_refresh_token
+from utils.token import generate_token_set 
 from utils.token import generate_access_token_by_refresh_token
 from rest_framework import status 
 from rest_framework import generics
@@ -16,14 +15,23 @@ class UserSignUpAPI(generics.CreateAPIView):
             instance.is_valid(raise_exception=True)
             instance.save()
             user_email = instance.data['email']
-            access_token = generate_access_token(user_email)
-            refresh_token = generate_refresh_token(user_email) 
-            token_set = {
-                'access_token': access_token, 
-                'refresh_token': refresh_token
-            } 
+            token_set = generate_token_set(user_email) 
             return Response(token_set, status=status.HTTP_201_CREATED)
           except Exception as e:
             return Response({'ERROR_MESSAGE': e.args}, status=status.HTTP_400_BAD_REQUEST) 
 
-# class UserLoginAPI(generics.CreateAPIView):
+class UserLoginAPI(generics.CreateAPIView):
+      serializer_class = UserLoginSerializer
+      def create(self, request, *args, **kwargs):
+          try:
+            instance = self.get_serializer(data=request.data)
+            instance.is_valid(raise_exception=True)
+            user_email = instance.data['email']
+            token_set = generate_token_set(user_email) 
+            return Response(token_set, status=status.HTTP_200_OK)
+          except NotFound as n:
+            return Response({'ERROR_MESSAGE': n.args}, status=status.HTTP_404_NOT_FOUND)
+          except ValidationError as v:
+            return Response({'ERROR_MESSAGE': v.args}, status=status.HTTP_400_BAD_REQUEST)
+          except Exception as e:
+            return Response({'ERROR_MESSAGE': e.args}, status=status.HTTP_400_BAD_REQUEST) 

@@ -31,6 +31,15 @@ def generate_refresh_token(email):
     refresh_token = jwt.encode(refresh_token_payload, secret_key, hashing_algorithm)
     return refresh_token 
 
+def generate_token_set(email):
+    access_token = generate_access_token(email)
+    refresh_token = generate_refresh_token(email)
+    token_set = {
+      'access_token': access_token,
+      'refresh_token': refresh_token
+    }
+    return token_set 
+    
 def generate_access_token_by_refresh_token(refresh_token): 
     try: 
       current_datetime = datetime.datetime.utcnow()

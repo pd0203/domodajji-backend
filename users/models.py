@@ -30,6 +30,12 @@ class User(AbstractUser):
       
       # Remove the username field from the user model 
       username = None 
+      first_name = None
+      last_name = None
+      date_joined = None
+      last_login = None
+      is_staff = None 
+      is_active = None
 
       # Set the email field as the username field for the user model 
       USERNAME_FIELD = 'email' 
