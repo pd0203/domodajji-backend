@@ -8,7 +8,7 @@ class UserSignUpSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(write_only=True)
     class Meta:
         model = User 
-        fields = ['email', 'password', 'password2', 'name']
+        fields = ['id', 'email', 'password', 'password2', 'name']
     def create(self, validated_data):
         password = validated_data['password']
         password2 = validated_data['password2']
@@ -17,12 +17,8 @@ class UserSignUpSerializer(serializers.ModelSerializer):
         validated_data.pop('password2')
         encoded_password = make_password(password)
         validated_data['password'] = encoded_password
-        return User.objects.create(**validated_data)
-    def validate(self, data):
-        user = User.objects.filter(email=data['email'])
-        if user: 
-           raise ValidationError('USER ALREADY REGISTERED')
-        return data
+        instance = User.objects.create(**validated_data)
+        return instance
     def validate_password(self, password):
         try:
            validate_password(password)
@@ -35,9 +31,10 @@ class UserLoginSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True) 
     class Meta:
         model = User
-        fields = ['email', 'password']
+        fields = ['id', 'email', 'password']
     def create(self, validated_data):
-        return User.objects.filter(email=validated_data['email']).first
+        instance = User.objects.get(email=validated_data['email'])
+        return instance 
     def validate(self, data):
         user = User.objects.filter(email=data['email']).first()
         if not user: 
@@ -47,4 +44,14 @@ class UserLoginSerializer(serializers.ModelSerializer):
         if check_password(raw_password, encoded_password) is False:
            raise ValidationError('PASSWORD IS INCORRECT') 
         return data 
-    
+
+class UserUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['profile_img_url', 'birthday', 'phone_number']
+    def validate(self, data): 
+        if len(str(data['birthday'])) != 8: 
+           raise ValueError('BIRTHDAY MUST BE 8 CHARACTERS')
+        if len(data['phone_number']) != 11: 
+           raise ValueError('PHONE NUMBER MUST BE 11 CHARACTERS')
+        return data 

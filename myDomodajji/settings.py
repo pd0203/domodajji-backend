@@ -1,5 +1,6 @@
 from dotenv import load_dotenv
 from pathlib import Path
+
 import os, pymysql
 
 pymysql.install_as_MySQLdb()
@@ -13,6 +14,13 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
+
+INTERNAL_IPS = ['127.0.0.1',]
+
+# AWS S3
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+AWS_S3_BUCKET_NAME = os.environ.get('AWS_S3_BUCKET_NAME')
 
 # Re-Definition of User Model 
 AUTH_USER_MODEL = 'users.User'
@@ -33,6 +41,9 @@ INSTALLED_APPS = [
 
     # CORS Policy
     'corsheaders',
+    
+    # debug toolbar
+    'debug_toolbar',
 
     # My App
     'users',
@@ -47,6 +58,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 TEMPLATES = [
@@ -78,7 +90,7 @@ DATABASES = {
         'HOST': os.environ.get('DB_HOST'),
         'PORT': os.environ.get('DB_PORT'),
 		'OPTIONS': {'charset': os.environ.get('DB_OPTION')},
-        'ATOMIC_REQUESTS': True,
+        'ATOMIC_REQUESTS': True
     }
 }
 

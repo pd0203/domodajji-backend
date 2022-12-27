@@ -34,7 +34,7 @@ class User(AbstractUser):
       last_name = None
       date_joined = None
       last_login = None
-      is_staff = None 
+      is_superuser = None 
       is_active = None
 
       # Set the email field as the username field for the user model 
@@ -48,6 +48,9 @@ class User(AbstractUser):
       
       class Meta:
             db_table = 'users'
+            indexes = [
+                models.Index(fields=['email', 'name'])
+            ]
 
       def __str__(self):
           return self.name + ': ' + self.email
