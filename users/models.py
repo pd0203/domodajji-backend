@@ -18,9 +18,9 @@ class UserManager(BaseUserManager):
           return self.create_user(email, password, **extra_fields)
 
 class User(AbstractUser):
-      name = models.CharField(max_length=30)
+      name = models.CharField(max_length=30, unique=True)
       email = models.EmailField(max_length=100, unique=True)
-      phone_number = models.CharField(max_length=100, unique=True)
+      phone_number = models.CharField(max_length=100, unique=True, null=True)
       password = models.CharField(max_length=255)
       sns_type = models.CharField(max_length=50, null=True)
       birthday = models.PositiveBigIntegerField(null=True)
@@ -34,7 +34,7 @@ class User(AbstractUser):
       last_name = None
       date_joined = None
       last_login = None
-      is_staff = None 
+      is_superuser = None 
       is_active = None
 
       # Set the email field as the username field for the user model 
@@ -48,6 +48,9 @@ class User(AbstractUser):
       
       class Meta:
             db_table = 'users'
+            indexes = [
+                models.Index(fields=['email', 'name'])
+            ]
 
       def __str__(self):
           return self.name + ': ' + self.email
