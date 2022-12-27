@@ -17,6 +17,8 @@ def user_validator(func):
             return Response({'ERROR_MESSAGE': d.args}, status=status.HTTP_401_UNAUTHORIZED)
         except User.DoesNotExist as n:
             return Response({'ERROR_MESSAGE': n.args}, status=status.HTTP_404_NOT_FOUND)
+        except AttributeError as a:
+           return Response({'ERROR_MESSAGE': {'Access token is not provided'}}, status=status.HTTP_400_BAD_REQUEST) 
         except Exception as e:
            return Response({'ERROR_MESSAGE': e.args}, status=status.HTTP_400_BAD_REQUEST)
         return func(self, request, *args, **kwargs)
