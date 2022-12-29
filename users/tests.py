@@ -28,7 +28,6 @@ class UserSignUpTest(APITestCase):
           "name": "박효상"
         }
         response = self.client.post(url, user_data, format='json')
-        print("response", response.data)
         self.assertEqual(response.status_code, 201)
         self.assertIn('access_token', response.data)
         self.assertIn('refresh_token', response.data)

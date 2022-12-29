@@ -11,12 +11,12 @@ def user_validator(func):
         try:
             token = request.headers.get('Authorization', None).split()[1]
             user_id = verify_token(token)
-            user = User.objects.get(id=user_id)
-            request.user = user
+            is_user = User.objects.filter(id=user_id).exists()
+            if is_user is False:
+               raise Exception('User is not registered')
+            request.user_id = user_id
         except jwt.exceptions.DecodeError as d:
             return Response({'ERROR_MESSAGE': d.args}, status=status.HTTP_401_UNAUTHORIZED)
-        except User.DoesNotExist as n:
-            return Response({'ERROR_MESSAGE': n.args}, status=status.HTTP_404_NOT_FOUND)
         except AttributeError as a:
            return Response({'ERROR_MESSAGE': {'Access token is not provided'}}, status=status.HTTP_400_BAD_REQUEST) 
         except Exception as e:
