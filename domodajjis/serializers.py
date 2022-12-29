@@ -23,6 +23,7 @@ class GatheringCreateSerializer(ModelSerializer):
         user_gathering.is_valid(raise_exception=True)
         user_gathering.save()
         return gathering
+        
 class GatheringListSerializer(ModelSerializer):
     host = serializers.SerializerMethodField()
     class Meta:

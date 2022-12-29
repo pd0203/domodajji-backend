@@ -9,7 +9,7 @@ class GatheringAPI(ModelViewSet):
     def get_queryset(self):
         if self.action == 'list':
            user_id = self.request.user_id
-           return Gathering.objects.filter(host=user_id).prefetch_related('host')
+           return Gathering.objects.filter(participant=user_id).prefetch_related('host')
     def get_serializer_class(self):
         if self.action == 'create':
            return GatheringCreateSerializer 
