@@ -1,16 +1,17 @@
 from users.models import User 
-from users.serializers import * 
+from users.serializers import UserSignUpSerializer, UserLoginSerializer, UserUpdateSerializer
 from utils.token import generate_token_set 
+from utils.user_validation import user_validator 
 from utils.s3 import S3Client
-
 from rest_framework import status 
 from rest_framework import generics
 from rest_framework.viewsets import ModelViewSet 
 from rest_framework.response import Response 
-from utils.user_validation import user_validator 
+from rest_framework.exceptions import NotFound
 from django.db import transaction 
 from django.shortcuts import get_object_or_404
 from django.conf import settings
+from django.http import Http404
 
 # AWS S3 
 AWS_ACCESS_KEY_ID = getattr(settings, 'AWS_ACCESS_KEY_ID')
@@ -70,7 +71,7 @@ class UserInfoAPI(ModelViewSet):
           if getattr(user_instance, '_prefetched_objects_cache', None):
              user_instance._prefetched_objects_cache = {}
           return Response(serializer.data, status=status.HTTP_200_OK)
-        except NotFound as n:
+        except Http404 as n:
             return Response({'ERROR_MESSAGE': n.args}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
            return Response({'ERROR_MESSAGE': e.args}, status=status.HTTP_400_BAD_REQUEST) 

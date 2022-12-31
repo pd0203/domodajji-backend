@@ -1,11 +1,12 @@
-from rest_framework import serializers
-from users.models import User 
+from users.models import User
+from domodajjis.models import UserGathering  
+from rest_framework.serializers import CharField, ModelSerializer, SerializerMethodField
 from rest_framework.exceptions import ValidationError, NotFound
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.hashers import make_password, check_password
 
-class UserSignUpSerializer(serializers.ModelSerializer):
-    password2 = serializers.CharField(write_only=True)
+class UserSignUpSerializer(ModelSerializer):
+    password2 = CharField(write_only=True)
     class Meta:
         model = User 
         fields = ['id', 'email', 'password', 'password2', 'name']
@@ -13,7 +14,7 @@ class UserSignUpSerializer(serializers.ModelSerializer):
         password = validated_data['password']
         password2 = validated_data['password2']
         if password != password2:
-            raise serializers.ValidationError('PASSWORD1 AND PASSWORD2 DO NOT MATCH')
+            raise ValidationError('PASSWORD1 AND PASSWORD2 DO NOT MATCH')
         validated_data.pop('password2')
         encoded_password = make_password(password)
         validated_data['password'] = encoded_password
@@ -24,11 +25,11 @@ class UserSignUpSerializer(serializers.ModelSerializer):
            validate_password(password)
            return password
         except ValidationError as v:
-            raise serializers.ValidationError(v.args)
+            raise ValidationError(v.args)
 
-class UserLoginSerializer(serializers.ModelSerializer):
-    email = serializers.CharField()
-    password = serializers.CharField(write_only=True) 
+class UserLoginSerializer(ModelSerializer):
+    email = CharField()
+    password = CharField(write_only=True) 
     class Meta:
         model = User
         fields = ['id', 'email', 'password']
@@ -45,7 +46,7 @@ class UserLoginSerializer(serializers.ModelSerializer):
            raise ValidationError('PASSWORD IS INCORRECT') 
         return data 
 
-class UserUpdateSerializer(serializers.ModelSerializer):
+class UserUpdateSerializer(ModelSerializer):
     class Meta:
         model = User
         fields = ['profile_img_url', 'birthday', 'phone_number']

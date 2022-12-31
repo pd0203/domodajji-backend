@@ -4,7 +4,7 @@ from django.test import override_settings
 from rest_framework.test import APITestCase
 import users.urls
 
-class GatheringCreateAPITest(APITestCase):
+class GatheringAPITest(APITestCase):
     def setUp(self):
         user_data = {
           'email': 'adefgh@gmail.com',
@@ -66,6 +66,21 @@ class GatheringCreateAPITest(APITestCase):
     @override_settings(DEBUG=True)
     def test_gathering_list_api_failure(self):
         url = reverse('gathering_list')
+        self.client.credentials(HTTP_AUTHORIZATION='')
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, 400)
+    
+    @override_settings(DEBUG=True)
+    def test_gathering_retrieve_api_success(self):
+        gathering_id = Gathering.objects.filter(name='룰루랄라 강남 20대 모임').first().id
+        url = reverse('gathering_retrieve', kwargs={'id': gathering_id})
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, 200)
+    
+    @override_settings(DEBUG=True)
+    def test_gathering_retrieve_api_failure(self):
+        gathering_id = Gathering.objects.filter(name='룰루랄라 강남 20대 모임').first().id
+        url = reverse('gathering_retrieve', kwargs={'id': gathering_id})
         self.client.credentials(HTTP_AUTHORIZATION='')
         response = self.client.get(url, format='json')
         self.assertEqual(response.status_code, 400)
