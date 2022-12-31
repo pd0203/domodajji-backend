@@ -1,7 +1,5 @@
 from domodajjis.models import Gathering, UserGathering
-from rest_framework import serializers
-from rest_framework.serializers import ModelSerializer
-from drf_writable_nested.serializers import WritableNestedModelSerializer
+from rest_framework.serializers import ModelSerializer, SerializerMethodField
 
 class UserGatheringCreateSerializer(ModelSerializer):
     class Meta:
@@ -23,9 +21,26 @@ class GatheringCreateSerializer(ModelSerializer):
         user_gathering.is_valid(raise_exception=True)
         user_gathering.save()
         return gathering
-        
+
+class GatheringRetrieveSerializer(ModelSerializer):
+    participants = SerializerMethodField()
+    class Meta:
+        model = Gathering
+        fields = ['id', 'name', 'policy', 'host', 'participants']
+    def get_participants(self, obj):
+        participants = []
+        user_gathering = UserGathering.objects.filter(gathering=obj.id).prefetch_related('user')
+        for participant in user_gathering:
+            participants.append({
+                'id': participant.user_id,
+                'role': participant.role,
+                'name': participant.user.name,
+                'profile_img_url': participant.user.profile_img_url
+            })
+        return participants
+   
 class GatheringListSerializer(ModelSerializer):
-    host = serializers.SerializerMethodField()
+    host = SerializerMethodField()
     class Meta:
         model = Gathering
         fields = ['id', 'name', 'member_count', 'host', 'created_at']
